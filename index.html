@@ -2,385 +2,514 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=yes"
-    />
-    <title>Premium 3D Project Showcase | Crypton</title>
-    <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Showcase | Liquid Glass</title>
     <style>
-      body {
+      :root {
+        --bg-deep: #0d0f13;
+        --glass-bg: rgba(255, 255, 255, 0.025);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glass-highlight: rgba(255, 255, 255, 0.04);
+        --text-primary: #e4e2df;
+        --text-secondary: #9a9895;
+        --text-muted: #6b6966;
+        --accent-steel: #7b8fa0;
+        --accent-warm: #b8a99a;
+        --accent-slate: #5f6b7a;
+        --btn-gh: rgba(255, 255, 255, 0.06);
+        --btn-live: rgba(120, 140, 160, 0.18);
+        --btn-live-hover: rgba(135, 155, 175, 0.3);
+        --card-radius: 20px;
+        --transition-smooth: 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+      }
+
+      * {
         margin: 0;
-        overflow-x: hidden;
-        font-family: "Inter", sans-serif;
-        background: radial-gradient(circle at 20% 20%, #0b0c1a, #030514);
-        color: #eef5ff;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
         scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
-      /* custom scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-        background: #0a0b1a;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #4f46e5;
-        border-radius: 10px;
-        box-shadow: 0 0 10px #818cf8;
+      body {
+        font-family:
+          "Inter",
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: transparent;
+        color: var(--text-primary);
+        min-height: 100vh;
+        overflow-x: hidden;
+        line-height: 1.6;
+        letter-spacing: 0.01em;
       }
 
-      /* 3D canvas background */
+      /* Three.js Canvas */
       #bg-canvas {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
         z-index: 0;
         pointer-events: none;
       }
 
-      .content {
-        position: relative;
-        z-index: 10;
+      /* Subtle grain overlay */
+      .grain-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+        background-size: 180px 180px;
       }
 
-      /* header */
+      /* Main scroll container */
+      .main-container {
+        position: relative;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .main-container > * {
+        pointer-events: auto;
+      }
+
+      /* Hero Section */
       .hero {
-        min-height: 60vh;
+        min-height: 55vh;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 2rem 1rem;
+        padding: 2rem;
         position: relative;
       }
-
+      .hero-tag {
+        display: inline-block;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        color: var(--text-muted);
+        margin-bottom: 1.25rem;
+        padding: 0.45rem 1.2rem;
+        border-radius: 999px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
       .hero h1 {
-        font-size: clamp(3rem, 8vw, 5.5rem);
-        font-weight: 700;
-        margin: 0;
-        background: linear-gradient(135deg, #c084fc, #60a5fa, #34d399);
+        font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        line-height: 1.15;
+      }
+      .hero h1 span {
+        font-weight: 500;
+        background: linear-gradient(
+          135deg,
+          #c4c9d0 0%,
+          #8b929a 40%,
+          #a5adb5 100%
+        );
         -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
         background-clip: text;
-        filter: drop-shadow(0 0 25px #4f46e580);
-        letter-spacing: -1px;
-        animation: floatText 4s ease-in-out infinite;
+        -webkit-text-fill-color: transparent;
+      }
+      .hero-subtitle {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 480px;
+        font-weight: 300;
+        letter-spacing: 0.02em;
+      }
+      .scroll-indicator {
+        margin-top: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        animation: floatDown 2.8s ease-in-out infinite;
+        opacity: 0.5;
+      }
+      .scroll-indicator span {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--text-muted);
+      }
+      .scroll-line {
+        width: 1px;
+        height: 36px;
+        background: linear-gradient(to bottom, var(--text-muted), transparent);
+        border-radius: 1px;
       }
 
-      @keyframes floatText {
-        0% {
-          transform: translateY(0px);
+      @keyframes floatDown {
+        0%,
+        100% {
+          transform: translateY(0);
         }
         50% {
-          transform: translateY(-8px);
-        }
-        100% {
-          transform: translateY(0px);
+          transform: translateY(10px);
         }
       }
 
-      .subtitle {
-        font-size: 1.3rem;
-        color: #a5b4fc;
-        max-width: 700px;
-        margin-top: 1rem;
-        font-weight: 400;
-        backdrop-filter: blur(10px);
-        background: rgba(10, 15, 40, 0.4);
-        padding: 0.8rem 2rem;
-        border-radius: 50px;
-        border: 1px solid rgba(139, 92, 246, 0.3);
-      }
-
-      /* card grid */
-      .projects-grid {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 3rem;
-        padding: 2rem 2rem 5rem;
-        max-width: 1400px;
+      /* Projects Grid */
+      .projects-section {
+        padding: 2rem 2rem 6rem;
+        max-width: 1100px;
         margin: 0 auto;
-      }
-
-      .card-wrapper {
-        flex: 1 1 320px;
-        max-width: 380px;
-        min-width: 300px;
-      }
-
-      .card {
-        background: rgba(12, 16, 35, 0.7);
-        backdrop-filter: blur(16px);
-        border-radius: 2.5rem;
-        padding: 2rem 1.8rem 2.2rem;
-        box-shadow:
-          0 30px 50px rgba(0, 0, 0, 0.7),
-          0 0 0 1px rgba(99, 102, 241, 0.25),
-          0 0 30px rgba(79, 70, 229, 0.4);
         display: flex;
         flex-direction: column;
-        align-items: center;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        gap: 3.5rem;
       }
 
-      .card::before {
+      /* Glass Card */
+      .project-card {
+        position: relative;
+        border-radius: var(--card-radius);
+        padding: 2.5rem 2.8rem;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(28px) saturate(140%);
+        -webkit-backdrop-filter: blur(28px) saturate(140%);
+        box-shadow:
+          0 4px 32px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 var(--glass-highlight),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+        transition: all var(--transition-smooth);
+        transform-style: preserve-3d;
+        perspective: 800px;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(50px);
+        will-change: transform, opacity, box-shadow;
+      }
+      .project-card.revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .project-card:hover {
+        box-shadow:
+          0 12px 48px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.07),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.14);
+        transform: translateY(-4px);
+      }
+
+      /* Animated liquid border */
+      .project-card::before {
         content: "";
         position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: radial-gradient(
-          circle at 30% 10%,
-          rgba(99, 102, 241, 0.25),
-          transparent 70%
+        inset: -1.5px;
+        border-radius: calc(var(--card-radius) + 1.5px);
+        padding: 1.5px;
+        background: conic-gradient(
+          from 0deg,
+          transparent 0%,
+          rgba(180, 190, 200, 0.25) 15%,
+          transparent 30%,
+          transparent 45%,
+          rgba(160, 175, 190, 0.3) 55%,
+          transparent 70%,
+          transparent 85%,
+          rgba(180, 190, 200, 0.25) 100%
         );
-        z-index: 0;
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        z-index: -1;
+        animation: liquidBorder 8s linear infinite;
+        opacity: 0.7;
         pointer-events: none;
       }
-
-      /* 3D object container (simulated with CSS shapes + animation) */
-      .three-d-icon {
-        width: 110px;
-        height: 110px;
-        margin: 0 auto 1.5rem;
-        position: relative;
-        z-index: 2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        perspective: 400px;
+      .project-card:hover::before {
+        animation-duration: 4.5s;
+        opacity: 1;
       }
 
-      .cube,
-      .pyramid,
-      .sphere {
-        width: 70px;
-        height: 70px;
-        position: relative;
-        transform-style: preserve-3d;
-        animation: rotate3d 8s infinite linear;
-      }
-
-      @keyframes rotate3d {
+      @keyframes liquidBorder {
         0% {
-          transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+          transform: rotate(0deg);
         }
         100% {
-          transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+          transform: rotate(360deg);
         }
       }
 
-      .cube div {
-        position: absolute;
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, #7c3aed, #2563eb);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        box-shadow: 0 0 25px #8b5cf6;
-        opacity: 0.9;
-      }
-      .cube .front {
-        transform: translateZ(35px);
-        background: #a78bfa;
-      }
-      .cube .back {
-        transform: rotateY(180deg) translateZ(35px);
-        background: #6366f1;
-      }
-      .cube .right {
-        transform: rotateY(90deg) translateZ(35px);
-        background: #4f46e5;
-      }
-      .cube .left {
-        transform: rotateY(-90deg) translateZ(35px);
-        background: #7c3aed;
-      }
-      .cube .top {
-        transform: rotateX(90deg) translateZ(35px);
-        background: #8b5cf6;
-      }
-      .cube .bottom {
-        transform: rotateX(-90deg) translateZ(35px);
-        background: #4338ca;
-      }
-
-      .pyramid {
-        width: 0;
-        height: 0;
-        border-left: 40px solid transparent;
-        border-right: 40px solid transparent;
-        border-bottom: 70px solid #f472b6;
-        filter: drop-shadow(0 0 20px #ec4899);
-        animation: rotate3d 7s infinite linear reverse;
-        position: relative;
-      }
-      .pyramid::after {
+      /* Inner shimmer */
+      .project-card::after {
         content: "";
         position: absolute;
-        top: 20px;
-        left: -20px;
-        border-left: 20px solid transparent;
-        border-right: 20px solid transparent;
-        border-bottom: 35px solid #fb7185;
-        filter: drop-shadow(0 0 15px #f43f5e);
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          ellipse at 30% 20%,
+          rgba(255, 255, 255, 0.04) 0%,
+          transparent 50%,
+          transparent 100%
+        );
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      .project-card:hover::after {
+        opacity: 1;
       }
 
-      .sphere {
-        background: radial-gradient(circle at 30% 30%, #34d399, #0d9488);
-        border-radius: 50%;
-        box-shadow:
-          0 0 40px #2dd4bf,
-          inset 0 -10px 15px rgba(0, 0, 0, 0.4);
-        animation: rotate3d 6s infinite alternate ease-in-out;
-      }
-
-      .project-title {
-        font-size: 1.9rem;
-        font-weight: 700;
-        margin: 0.6rem 0 0.3rem;
-        background: linear-gradient(to right, #e0e7ff, #c7d2fe);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        z-index: 2;
+      /* Card content wrapper */
+      .card-content {
         position: relative;
+        z-index: 1;
       }
 
-      .project-desc {
+      .card-index {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+        font-weight: 500;
+      }
+      .card-title {
+        font-size: 1.65rem;
+        font-weight: 450;
+        letter-spacing: -0.02em;
+        color: var(--text-primary);
+        margin-bottom: 0.6rem;
+        line-height: 1.25;
+      }
+      .card-description {
         font-size: 0.95rem;
-        color: #b9c2e0;
-        margin-bottom: 2rem;
-        line-height: 1.5;
-        z-index: 2;
-        position: relative;
+        color: var(--text-secondary);
+        font-weight: 300;
+        line-height: 1.55;
+        margin-bottom: 1.8rem;
+        max-width: 540px;
       }
 
-      .button-group {
+      /* Tech tags */
+      .card-tags {
         display: flex;
-        gap: 1.2rem;
         flex-wrap: wrap;
-        justify-content: center;
-        z-index: 5;
-        position: relative;
-        margin-top: auto;
+        gap: 0.5rem;
+        margin-bottom: 1.8rem;
+      }
+      .card-tag {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+      }
+      .project-card:hover .card-tag {
+        border-color: rgba(255, 255, 255, 0.14);
+        color: var(--text-secondary);
       }
 
+      /* Buttons */
+      .card-buttons {
+        display: flex;
+        gap: 0.9rem;
+        flex-wrap: wrap;
+      }
       .btn {
-        padding: 0.8rem 1.7rem;
-        border-radius: 3rem;
-        font-weight: 600;
-        font-size: 0.95rem;
-        text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        transition: all 0.3s;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        letter-spacing: 0.3px;
+        padding: 0.7rem 1.5rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 450;
+        letter-spacing: 0.02em;
         cursor: pointer;
+        transition: all var(--transition-smooth);
+        text-decoration: none;
+        border: 1px solid transparent;
         position: relative;
-        z-index: 10;
+        overflow: hidden;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        white-space: nowrap;
       }
-
-      .btn-github {
-        background: rgba(20, 20, 40, 0.9);
-        color: #f0f0ff;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      .btn-gh {
+        background: var(--btn-gh);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: var(--text-primary);
       }
-      .btn-github:hover {
-        background: #2d2b55;
-        border-color: #a78bfa;
-        box-shadow: 0 0 25px #8b5cf6;
-        transform: translateY(-3px);
+      .btn-gh:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.22);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.04);
+        transform: translateY(-1px);
       }
-
       .btn-live {
-        background: linear-gradient(135deg, #4f46e5, #7c3aed);
-        color: white;
-        box-shadow: 0 10px 25px #4f46e5aa;
-        border: 1px solid #c084fc;
+        background: var(--btn-live);
+        border-color: rgba(160, 180, 200, 0.25);
+        color: #d5dde4;
       }
       .btn-live:hover {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        box-shadow: 0 0 35px #a78bfa;
-        transform: translateY(-3px);
+        background: var(--btn-live-hover);
+        border-color: rgba(170, 190, 210, 0.4);
+        box-shadow: 0 0 24px rgba(140, 160, 185, 0.12);
+        transform: translateY(-1px);
+      }
+      .btn svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        opacity: 0.75;
+        transition: opacity 0.3s ease;
+      }
+      .btn:hover svg {
+        opacity: 1;
       }
 
-      footer {
-        text-align: center;
-        padding: 2rem;
-        color: #6b7280;
-        font-size: 0.9rem;
-        border-top: 1px solid rgba(99, 102, 241, 0.2);
-        margin-top: 2rem;
-        backdrop-filter: blur(10px);
-      }
-
-      @media (max-width: 700px) {
-        .projects-grid {
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero {
+          min-height: 45vh;
+          padding: 1.5rem;
+        }
+        .hero h1 {
+          font-size: 2rem;
+        }
+        .hero-subtitle {
+          font-size: 0.9rem;
+        }
+        .projects-section {
+          padding: 1rem 1rem 4rem;
           gap: 2.5rem;
-          padding: 1rem;
+        }
+        .project-card {
+          padding: 1.8rem 1.5rem;
+          border-radius: 16px;
+        }
+        .project-card::before {
+          border-radius: 17px;
+        }
+        .card-title {
+          font-size: 1.3rem;
+        }
+        .card-description {
+          font-size: 0.85rem;
+        }
+        .card-buttons {
+          flex-direction: column;
+          gap: 0.6rem;
         }
         .btn {
-          padding: 0.7rem 1.3rem;
+          justify-content: center;
+          padding: 0.6rem 1.3rem;
+          font-size: 0.8rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .hero h1 {
+          font-size: 1.6rem;
+        }
+        .project-card {
+          padding: 1.4rem 1.1rem;
+        }
+        .card-title {
+          font-size: 1.15rem;
+        }
+        .card-tags {
+          gap: 0.35rem;
+        }
+        .card-tag {
+          font-size: 0.65rem;
+          padding: 0.28rem 0.65rem;
         }
       }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;450;500;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <!-- 3D animated background canvas -->
+    <!-- Three.js Background Canvas -->
     <canvas id="bg-canvas"></canvas>
 
-    <div class="content">
-      <div class="hero">
-        <h1>✦ CRYPTON LABS ✦</h1>
-        <p class="subtitle">Premium 3D AI Project Ecosystem</p>
-      </div>
+    <!-- Grain Texture Overlay -->
+    <div class="grain-overlay"></div>
 
-      <div class="projects-grid">
-        <!-- Project 1: ATS Resume Copilot -->
-        <div class="card-wrapper">
-          <div class="card">
-            <div class="three-d-icon">
-              <div class="cube">
-                <div class="front"></div>
-                <div class="back"></div>
-                <div class="right"></div>
-                <div class="left"></div>
-                <div class="top"></div>
-                <div class="bottom"></div>
-              </div>
-            </div>
-            <h2 class="project-title">ATS AI Resume Copilot</h2>
-            <p class="project-desc">
-              Intelligent resume screening & ATS-friendly maker powered by AI.
-              Optimize your CV for top companies.
+    <!-- Main Content -->
+    <div class="main-container">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-tag">✦ Portfolio</div>
+        <h1>Liquid <span>Glass</span> Works</h1>
+        <p class="hero-subtitle">
+          A curated collection of AI-driven projects — each crafted with
+          precision, wrapped in minimalistic elegance.
+        </p>
+        <div class="scroll-indicator">
+          <span>Scroll</span>
+          <div class="scroll-line"></div>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section class="projects-section" id="projects">
+        <!-- Project 1: ATS AI Resume Screening Copilot -->
+        <article class="project-card" data-delay="0">
+          <div class="card-content">
+            <div class="card-index">01 / 03</div>
+            <h2 class="card-title">ATS AI Resume Screening Copilot</h2>
+            <p class="card-description">
+              An intelligent resume optimization engine that analyzes job
+              descriptions and refines your resume for maximum ATS compatibility
+              — leveraging NLP to boost interview chances.
             </p>
-            <div class="button-group">
+            <div class="card-tags">
+              <span class="card-tag">NLP</span>
+              <span class="card-tag">Streamlit</span>
+              <span class="card-tag">Python</span>
+              <span class="card-tag">ATS</span>
+            </div>
+            <div class="card-buttons">
               <a
                 href="https://github.com/Crypton0305/ATS-friendly-resume-maker"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-github"
+                class="btn btn-gh"
               >
-                <i class="fab fa-github"></i> GitHub
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                  />
+                </svg>
+                GitHub Repo
               </a>
               <a
                 href="https://ats-friendly-resume-maker-ai.streamlit.app/"
@@ -388,31 +517,53 @@
                 rel="noopener noreferrer"
                 class="btn btn-live"
               >
-                <i class="fas fa-external-link-alt"></i> Live Preview
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"
+                  />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                Live Preview
               </a>
             </div>
           </div>
-        </div>
+        </article>
 
         <!-- Project 2: Loan Eligibility Predictor -->
-        <div class="card-wrapper">
-          <div class="card">
-            <div class="three-d-icon">
-              <div class="pyramid"></div>
-            </div>
-            <h2 class="project-title">Loan Eligibility Predictor</h2>
-            <p class="project-desc">
-              AI-driven loan approval prediction with explainable insights.
-              Instant eligibility check with high accuracy.
+        <article class="project-card" data-delay="150">
+          <div class="card-content">
+            <div class="card-index">02 / 03</div>
+            <h2 class="card-title">Loan Eligibility Predictor</h2>
+            <p class="card-description">
+              A machine learning-powered loan approval system that evaluates
+              applicant profiles in real-time, delivering instant eligibility
+              predictions with high accuracy.
             </p>
-            <div class="button-group">
+            <div class="card-tags">
+              <span class="card-tag">ML</span>
+              <span class="card-tag">Streamlit</span>
+              <span class="card-tag">Scikit-learn</span>
+              <span class="card-tag">Finance</span>
+            </div>
+            <div class="card-buttons">
               <a
                 href="https://github.com/Crypton0305/loan-predictor-AI"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-github"
+                class="btn btn-gh"
               >
-                <i class="fab fa-github"></i> GitHub
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                  />
+                </svg>
+                GitHub Repo
               </a>
               <a
                 href="https://loan-predictor-ai.streamlit.app/"
@@ -420,31 +571,53 @@
                 rel="noopener noreferrer"
                 class="btn btn-live"
               >
-                <i class="fas fa-external-link-alt"></i> Live Preview
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"
+                  />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                Live Preview
               </a>
             </div>
           </div>
-        </div>
+        </article>
 
         <!-- Project 3: AI Insurance Claim Bot -->
-        <div class="card-wrapper">
-          <div class="card">
-            <div class="three-d-icon">
-              <div class="sphere"></div>
-            </div>
-            <h2 class="project-title">AI Insurance Claim Bot</h2>
-            <p class="project-desc">
-              Smart insurance claim assistant with fraud detection & automated
-              processing. Hackathon winning solution.
+        <article class="project-card" data-delay="300">
+          <div class="card-content">
+            <div class="card-index">03 / 03</div>
+            <h2 class="card-title">AI Insurance Claim Bot</h2>
+            <p class="card-description">
+              An automated insurance claim assistant that streamlines claim
+              submissions, verifies policy details, and provides intelligent
+              guidance — reducing processing time significantly.
             </p>
-            <div class="button-group">
+            <div class="card-tags">
+              <span class="card-tag">AI Agent</span>
+              <span class="card-tag">Streamlit</span>
+              <span class="card-tag">Automation</span>
+              <span class="card-tag">InsurTech</span>
+            </div>
+            <div class="card-buttons">
               <a
                 href="https://github.com/Crypton0305/hackathon-ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-github"
+                class="btn btn-gh"
               >
-                <i class="fab fa-github"></i> GitHub
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                  />
+                </svg>
+                GitHub Repo
               </a>
               <a
                 href="https://hackathon-ai-5dcdszcu4zrztmkcbiq3ga.streamlit.app/"
@@ -452,134 +625,398 @@
                 rel="noopener noreferrer"
                 class="btn btn-live"
               >
-                <i class="fas fa-external-link-alt"></i> Live Preview
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"
+                  />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                Live Preview
               </a>
             </div>
           </div>
-        </div>
-      </div>
-
-      <footer>
-        <p>
-          © 2025 Crypton · Premium 3D Experience | All live demos run on
-          Streamlit Cloud
-        </p>
-      </footer>
+        </article>
+      </section>
     </div>
 
-    <script>
-      (function () {
-        const canvas = document.getElementById("bg-canvas");
-        const ctx = canvas.getContext("2d");
-        let width, height;
-        let particles = [];
-
-        function resize() {
-          width = window.innerWidth;
-          height = window.innerHeight;
-          canvas.width = width;
-          canvas.height = height;
+    <!-- Three.js Import Map -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.157.0/build/three.module.js"
         }
-        window.addEventListener("resize", resize);
-        resize();
+      }
+    </script>
 
-        // Particle class for floating 3D-like objects
-        class Particle {
-          constructor() {
-            this.reset();
-          }
-          reset() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.size = Math.random() * 3.5 + 1.2;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
-            this.color = `rgba(${Math.floor(130 + Math.random() * 80)}, ${Math.floor(100 + Math.random() * 100)}, ${Math.floor(200 + Math.random() * 55)}, ${Math.random() * 0.6 + 0.25})`;
-            this.shape = Math.random() > 0.6 ? "square" : "circle";
-          }
-          update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (
-              this.x < -10 ||
-              this.x > width + 10 ||
-              this.y < -10 ||
-              this.y > height + 10
-            ) {
-              this.reset();
-              this.x = Math.random() * width;
-              this.y = Math.random() * height;
-            }
-          }
-          draw() {
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            // subtle rotation illusion
-            ctx.rotate(Date.now() * 0.0005);
-            ctx.fillStyle = this.color;
-            ctx.shadowColor = "#a78bfa";
-            ctx.shadowBlur = 8;
-            if (this.shape === "square") {
-              ctx.fillRect(
-                -this.size / 1.8,
-                -this.size / 1.8,
-                this.size * 1.2,
-                this.size * 1.2,
-              );
-            } else {
-              ctx.beginPath();
-              ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-              ctx.fill();
-            }
-            ctx.restore();
-          }
-        }
+    <script type="module">
+      import * as THREE from "three";
 
-        // Initialize particles
-        function initParticles(count = 140) {
-          particles = [];
-          for (let i = 0; i < count; i++) {
-            particles.push(new Particle());
-          }
-        }
-        initParticles(130);
+      // ─────────────────────────────────────
+      // THREE.JS SCENE SETUP
+      // ─────────────────────────────────────
+      const canvas = document.getElementById("bg-canvas");
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 0.9;
 
-        function animateParticles() {
-          ctx.clearRect(0, 0, width, height);
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color("#0d0f13");
+      scene.fog = new THREE.Fog("#0d0f13", 4, 22);
 
-          // Draw connecting lines for premium look
-          ctx.strokeStyle = "rgba(139, 92, 246, 0.07)";
-          ctx.lineWidth = 0.6;
-          for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-              const dx = particles[i].x - particles[j].x;
-              const dy = particles[i].y - particles[j].y;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < 120) {
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.strokeStyle = `rgba(129, 140, 248, ${0.08 * (1 - dist / 120)})`;
-                ctx.stroke();
-              }
-            }
-          }
+      const camera = new THREE.PerspectiveCamera(
+        50,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        50,
+      );
+      camera.position.set(0, 1.5, 9);
+      camera.lookAt(0, 0, 0);
 
-          particles.forEach((p) => {
-            p.update();
-            p.draw();
-          });
-          requestAnimationFrame(animateParticles);
-        }
+      // ─────────────────────────────────────
+      // LIGHTING
+      // ─────────────────────────────────────
+      const ambientLight = new THREE.AmbientLight("#3a4450", 1.6);
+      scene.add(ambientLight);
 
-        animateParticles();
+      const keyLight = new THREE.DirectionalLight("#d5dde4", 2.2);
+      keyLight.position.set(5, 4, 6);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.width = 1024;
+      keyLight.shadow.mapSize.height = 1024;
+      keyLight.shadow.camera.near = 0.5;
+      keyLight.shadow.camera.far = 40;
+      keyLight.shadow.camera.left = -10;
+      keyLight.shadow.camera.right = 10;
+      keyLight.shadow.camera.top = 10;
+      keyLight.shadow.camera.bottom = -10;
+      keyLight.shadow.bias = -0.0002;
+      keyLight.shadow.normalBias = 0.015;
+      scene.add(keyLight);
 
-        // Re-init particles on resize to avoid sparse areas
-        window.addEventListener("resize", () => {
-          resize();
-          initParticles(130);
+      const rimLight = new THREE.DirectionalLight("#8b95a5", 1.0);
+      rimLight.position.set(-3, -1, -4);
+      scene.add(rimLight);
+
+      const topLight = new THREE.PointLight("#c8d0d8", 3, 12);
+      topLight.position.set(0, 6, 2);
+      scene.add(topLight);
+
+      // ─────────────────────────────────────
+      // 3D OBJECTS — Muted Geometric Shapes
+      // ─────────────────────────────────────
+      const objectsGroup = new THREE.Group();
+      scene.add(objectsGroup);
+
+      // Material factory
+      function createMutedMaterial(
+        hexColor,
+        roughness = 0.55,
+        metalness = 0.15,
+        opacity = 0.7,
+      ) {
+        return new THREE.MeshStandardMaterial({
+          color: new THREE.Color(hexColor),
+          roughness,
+          metalness,
+          transparent: true,
+          opacity,
+          depthWrite: true,
         });
-      })();
+      }
+
+      function createWireframeMaterial(hexColor, opacity = 0.18) {
+        return new THREE.MeshBasicMaterial({
+          color: new THREE.Color(hexColor),
+          wireframe: true,
+          transparent: true,
+          opacity,
+          depthWrite: false,
+        });
+      }
+
+      // 1. Large central torus knot — muted steel
+      const torusKnotGeo = new THREE.TorusKnotGeometry(
+        1.6,
+        0.25,
+        180,
+        28,
+        2,
+        3,
+      );
+      const torusKnotMat = createMutedMaterial("#7b8fa0", 0.5, 0.2, 0.55);
+      const torusKnot = new THREE.Mesh(torusKnotGeo, torusKnotMat);
+      torusKnot.position.set(1.8, -0.6, -2.5);
+      torusKnot.castShadow = true;
+      torusKnot.receiveShadow = true;
+      objectsGroup.add(torusKnot);
+
+      // 2. Large wireframe icosahedron
+      const icoGeo = new THREE.IcosahedronGeometry(1.9, 1);
+      const icoMat = createWireframeMaterial("#9aa8b5", 0.13);
+      const ico = new THREE.Mesh(icoGeo, icoMat);
+      ico.position.set(-2.4, 1.0, -3.5);
+      objectsGroup.add(ico);
+
+      // 3. Medium torus — warm muted
+      const torusGeo = new THREE.TorusGeometry(1.1, 0.18, 64, 80);
+      const torusMat = createMutedMaterial("#b8a99a", 0.6, 0.1, 0.5);
+      const torus = new THREE.Mesh(torusGeo, torusMat);
+      torus.position.set(-1.5, -1.3, -1.8);
+      torus.castShadow = true;
+      torus.receiveShadow = true;
+      objectsGroup.add(torus);
+
+      // 4. Octahedron — subtle slate
+      const octGeo = new THREE.OctahedronGeometry(0.7, 0);
+      const octMat = createMutedMaterial("#6b7d8e", 0.45, 0.25, 0.6);
+      const oct = new THREE.Mesh(octGeo, octMat);
+      oct.position.set(2.5, 1.4, -3.0);
+      oct.castShadow = true;
+      objectsGroup.add(oct);
+
+      // 5. Small floating wireframe dodecahedron
+      const dodGeo = new THREE.DodecahedronGeometry(0.55, 0);
+      const dodMat = createWireframeMaterial("#a0adb8", 0.2);
+      const dod = new THREE.Mesh(dodGeo, dodMat);
+      dod.position.set(-0.8, 1.8, -4.5);
+      objectsGroup.add(dod);
+
+      // 6. Subtle sphere cluster
+      const sphereGeo = new THREE.SphereGeometry(0.35, 32, 32);
+      const sphereMat = createMutedMaterial("#8896a3", 0.4, 0.3, 0.5);
+      const spherePositions = [
+        [3.0, -1.5, -4.0],
+        [-2.8, -0.4, -4.2],
+        [0.5, -2.2, -3.2],
+        [-1.2, 2.5, -5.0],
+      ];
+      const spheres = [];
+      spherePositions.forEach(([x, y, z]) => {
+        const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+        sphere.position.set(x, y, z);
+        sphere.castShadow = true;
+        sphere.receiveShadow = true;
+        objectsGroup.add(sphere);
+        spheres.push(sphere);
+      });
+
+      // 7. Subtle ring / thin torus
+      const ringGeo = new THREE.TorusGeometry(0.9, 0.04, 32, 100);
+      const ringMat = createWireframeMaterial("#c5cdd5", 0.22);
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.position.set(1.0, 2.2, -5.5);
+      ring.rotation.x = Math.PI * 0.35;
+      objectsGroup.add(ring);
+
+      // ─────────────────────────────────────
+      // FLOATING PARTICLES
+      // ─────────────────────────────────────
+      const particlesCount = 180;
+      const particlesGeo = new THREE.BufferGeometry();
+      const positions = new Float32Array(particlesCount * 3);
+      const particleSpeeds = [];
+
+      for (let i = 0; i < particlesCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 14;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 10 - 2;
+        particleSpeeds.push({
+          vy: (Math.random() - 0.5) * 0.003,
+          vx: (Math.random() - 0.5) * 0.002,
+          amplitude: Math.random() * 0.6 + 0.2,
+          phase: Math.random() * Math.PI * 2,
+        });
+      }
+      particlesGeo.setAttribute(
+        "position",
+        new THREE.BufferAttribute(positions, 3),
+      );
+      const particlesMat = new THREE.PointsMaterial({
+        color: "#8b95a5",
+        size: 0.018,
+        transparent: true,
+        opacity: 0.5,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      });
+      const particles = new THREE.Points(particlesGeo, particlesMat);
+      scene.add(particles);
+
+      // ─────────────────────────────────────
+      // MOUSE PARALLAX TRACKING
+      // ─────────────────────────────────────
+      const mouse = { x: 0, y: 0 };
+      const targetMouse = { x: 0, y: 0 };
+
+      window.addEventListener("mousemove", (e) => {
+        targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        targetMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+
+      // Touch support
+      window.addEventListener(
+        "touchmove",
+        (e) => {
+          const touch = e.touches[0];
+          targetMouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+          targetMouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+        },
+        { passive: true },
+      );
+
+      // ─────────────────────────────────────
+      // ANIMATION LOOP
+      // ─────────────────────────────────────
+      const clock = new THREE.Clock();
+
+      function animate(time) {
+        requestAnimationFrame(animate);
+
+        const dt = Math.min(clock.getDelta(), 0.1);
+        const elapsed = time * 0.001;
+
+        // Smooth mouse follow
+        mouse.x += (targetMouse.x - mouse.x) * 0.04;
+        mouse.y += (targetMouse.y - mouse.y) * 0.04;
+
+        // Rotate objects
+        torusKnot.rotation.x += 0.0018;
+        torusKnot.rotation.y += 0.0022;
+        torusKnot.rotation.z += 0.0009;
+
+        ico.rotation.x -= 0.0012;
+        ico.rotation.y += 0.0016;
+        ico.rotation.z += 0.0007;
+
+        torus.rotation.x += 0.002;
+        torus.rotation.y -= 0.0014;
+
+        oct.rotation.x += 0.003;
+        oct.rotation.y += 0.0025;
+        oct.rotation.z -= 0.001;
+
+        dod.rotation.x -= 0.0028;
+        dod.rotation.y += 0.0019;
+
+        ring.rotation.z += 0.0022;
+        ring.rotation.y += 0.001;
+
+        spheres.forEach((s, i) => {
+          s.rotation.x += 0.0015 * (i + 1);
+          s.rotation.y += 0.002 * (i + 0.5);
+        });
+
+        // Float particles
+        const posArr = particlesGeo.attributes.position.array;
+        for (let i = 0; i < particlesCount; i++) {
+          const idx = i * 3;
+          posArr[idx + 1] += particleSpeeds[i].vy;
+          posArr[idx] +=
+            Math.sin(elapsed * 0.8 + particleSpeeds[i].phase) * 0.0015;
+
+          // Wrap around
+          if (posArr[idx + 1] > 5) posArr[idx + 1] = -5;
+          if (posArr[idx + 1] < -5) posArr[idx + 1] = 5;
+          if (Math.abs(posArr[idx]) > 7) posArr[idx] *= -0.99;
+          if (Math.abs(posArr[idx + 2]) > 6) posArr[idx + 2] *= -0.99;
+        }
+        particlesGeo.attributes.position.needsUpdate = true;
+
+        // Camera subtle parallax
+        const parallaxX = mouse.x * 0.35;
+        const parallaxY = mouse.y * 0.25;
+        camera.position.x += (parallaxX - camera.position.x) * 0.02;
+        camera.position.y += (1.5 + parallaxY - camera.position.y) * 0.02;
+        camera.lookAt(0, 0, -0.5);
+
+        // Subtle light movement
+        topLight.intensity = 3 + Math.sin(elapsed * 0.5) * 0.6;
+
+        renderer.render(scene, camera);
+      }
+
+      // ─────────────────────────────────────
+      // RESIZE HANDLER
+      // ─────────────────────────────────────
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Start animation
+      requestAnimationFrame(animate);
+
+      // ─────────────────────────────────────
+      // SCROLL-BASED CARD REVEAL
+      // ─────────────────────────────────────
+      const cards = document.querySelectorAll(".project-card");
+
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px 0px -60px 0px",
+        threshold: 0.15,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const card = entry.target;
+            const delay = parseInt(card.getAttribute("data-delay")) || 0;
+            setTimeout(() => {
+              card.classList.add("revealed");
+            }, delay);
+            observer.unobserve(card);
+          }
+        });
+      }, observerOptions);
+
+      cards.forEach((card) => observer.observe(card));
+
+      // ─────────────────────────────────────
+      // CARD 3D TILT ON HOVER
+      // ─────────────────────────────────────
+      cards.forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -6;
+          const rotateY = ((x - centerX) / centerX) * 6;
+          card.style.transform = `perspective(800px) translateY(-4px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        card.addEventListener("mouseleave", () => {
+          card.style.transform =
+            "perspective(800px) translateY(0px) rotateX(0deg) rotateY(0deg)";
+        });
+      });
+
+      console.log(
+        "%c✨ Liquid Glass Showcase Ready %c| %c3 Projects Loaded",
+        "color:#c4c9d0;font-size:1.1em;",
+        "",
+        "color:#9a9895;",
+      );
+      console.log(
+        "%c🖱️  Try hovering over the cards for the 3D tilt effect.",
+        "color:#7b8fa0;font-style:italic;",
+      );
     </script>
   </body>
 </html>
